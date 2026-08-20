@@ -874,12 +874,12 @@ function atualizarListaPontos() {
 
         <div style="
             padding:10px;
-            margin-bottom:6px;
+            margin-bottom:10px;
             border:1px solid #ddd;
-            border-radius:4px;
+            border-radius:6px;
             background:#fafafa;">
 
-            <strong>Ponto ${index+1}</strong><br>
+            <strong>Ocorrência ${index+1}</strong><br>
 
             Item: ${ponto.item}<br>
 
@@ -891,7 +891,15 @@ function atualizarListaPontos() {
             ${ponto.precisao} m<br>
 
             Data/Hora:
-            ${ponto.dataHora}
+            ${ponto.dataHora}<br><br>
+
+            ${
+                ponto.foto
+                ?
+                `${ponto.foto}`
+                :
+                ""
+            }
 
         </div>
 
