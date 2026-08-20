@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#064516">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>IBAMA - Monitoramento de Acidente Ferroviário</title>
+    <style>
+        :root { --ibama-green: #064516; --ibama-light: #f0f7f1; --text-color: #242424; --border-color: #d1d1d1; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #edf2ee; color: var(--text-color); padding: 20px 10px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 800px; background: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border-top: 8px solid var(--ibama-green); }
+        .logo-container { text-align: center; padding: 20px 20px 0 20px; background: #ffffff; }
+        .logo-container svg { width: 110px; height: auto; }
+        .header { background-color: #ffffff; color: var(--ibama-green); padding: 15px 25px 25px 25px; text-align: center; border-bottom: 2px solid var(--ibama-green); }
+        .header h1 { font-size: 16px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; line-height: 1.3; }
+        .header h2 { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 12px; text-transform: uppercase; }
+        .header h3 { font-size: 14px; background: var(--ibama-light); display: inline-block; padding: 6px 16px; border-radius: 4px; font-weight: 600; border: 1px solid rgba(6,69,22,0.2); }
+        .section-info { padding: 25px; background-color: var(--ibama-light); border-bottom: 1px solid #e0e0e0; }
+        .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .grid-info { grid-template-columns: 1fr; } }
+        .field-group { display: flex; flex-direction: column; }
+        .field-group label { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 5px; }
+        .field-group input { padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; outline: none; }
+        .field-group input:focus { border-color: var(--ibama-green); }
+        .questions-list { padding: 25px; }
+        .question-card { padding: 20px 0; border-bottom: 1px solid #f0f0f0; }
+        .question-text { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 12px; line-height: 1.4; }
+        .options-group { display: flex; gap: 25px; margin-bottom: 10px; }
+        .option-label { display: flex; align-items: center; font-size: 15px; cursor: pointer; user-select: none; font-weight: 500; }
+        .option-label input { margin-right: 8px; width: 22px; height: 22px; accent-color: var(--ibama-green); cursor: pointer; }
+        .obs-input { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; outline: none; margin-top: 8px; background-color: #fafafa; }
+        .obs-input:focus { background-color: #fff; border-color: var(--ibama-green); }
+        .general-obs { padding: 0 25px 25px 25px; }
+        .general-obs textarea { width: 100%; height: 100px; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; resize: vertical; outline: none; }
+        .footer-notes { background: #fafafa; padding: 20px 25px; font-size: 12px; color: #666; border-top: 1px solid #eee; line-height: 1.5; }
+        .btn-container { padding: 0 25px 30px 25px; text-align: center; }
+        .btn-submit { background-color: var(--ibama-green); color: white; border: none; padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: 4px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+        .btn-submit:hover { background-color: #043310; }
+/* Estilo do botão vermelho de limpar */
+        .btn-clear { background-color: #bc2523; color: white; border: none; padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: 4px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.15); margin-left: 15px; }
+        .btn-clear:hover { background-color: #8a1614; }
+        
+        /* Ajustes automáticos para que o PDF gerado ignore os botões e saia perfeito */
+        @media print {
+            body { background-color: #ffffff; padding: 0; }
+            .container { box-shadow: none; border-top: none; max-width: 100%; }
+            .btn-container, .footer-notes { display: none !important; }
+            input[type="text"], textarea { border: none !important; background: transparent !important; padding: 0 !important; }
+            input[type="radio"] { accent-color: #000 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>INSTITUTO BRASILEIRO DO MEIO AMBIENTE E DOS RECURSOS NATURAIS RENOVÁVEIS</h1>
+        <h2>CENTRO NACIONAL DE EMERGÊNCIAS AMBIENTAIS E CLIMÁTICAS - Ceneac</h2>
+        <h3>Check-List de Monitoramento: Ferrovia</h3>
+    </div>
+
+    <form id="formMonitoramento">
+        <div class="section-info">
+            <div class="grid-info">
+                <div class="field-group">
+                    <label>Agente de Emergências Ambientais</label>
+                    <input type="text" id="agente" placeholder="Nome completo">
+                </div>
+                <div class="field-group">
+                    <label>Data da Vistoria</label>
+                    <input type="date" id="data_vistoria">
+                </div>
+                <div class="field-group">
+                    <label>Nome da Empresa</label>
+                    <input type="text" id="empresa" placeholder="Razão social">
+                </div>
+                <div class="field-group">
+                    <label>CNPJ</label>
+                    <input type="text" id="cnpj" placeholder="00.000.000/0001-00">
+                </div>
+                <div class="field-group">
+                    <label>Município do Acidente</label>
+                    <input type="text" id="municipio" placeholder="Cidade / UF">
+                </div>
+                <div class="field-group">
+    <label>Coordenada Geográfica de Referência</label>
+
+    <input
+        type="text"
+        id="coordenadas"
+        placeholder="Obtendo localização..."
+        readonly>
+
+    <button
+        type="button"
+        onclick="capturarGPS()"
+        style="margin-top:8px;
+               padding:8px;
+               background:#064516;
+               color:white;
+               border:none;
+               border-radius:4px;
+               cursor:pointer;">
+        Atualizar GPS
+    </button>
+
+    <small id="gpsStatus"
+           style="margin-top:5px;color:#666;">
+        Aguardando localização...
+    </small>
+</div>
+
+            </div>
+        </div>
+
+        <div class="questions-list">
+            <div class="question-card">
+                <div class="question-text">01. Qual a área (ha) afetada pelo acidente? (Delimitar faixa de domínio)</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_1" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_1" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_1" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_1" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">02. O solo está exposto?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_2" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_2" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_2" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_2" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">03. É uma área de preservação permanente? Qual?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_3" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_3" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_3" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_3" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">04. Existe vestígio de óleo na vegetação?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_4" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_4" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_4" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_4" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">05. Existe folhagem queimada no local?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_5" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_5" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_5" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_5" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">06. Existe vegetação morta? Qual o motivo aparente?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_6" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_6" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_6" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_6" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">07. Existe odor de óleo ou outro produto químico no local?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_7" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_7" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_7" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_7" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">08. Existe vestígio de óleo na água (iridescência/brilho)?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_8" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_8" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_8" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_8" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">09. Existe vestígio de óleo no solo superficial?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_9" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_9" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_9" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_9" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">10. Existe vestígio de óleo abaixo do solo? (cavar a cada 50m / profundidade)</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_10" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_10" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_10" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_10" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">11. Qual o tipo de vegetação do local?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_11" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_11" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_11" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_11" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">12. Qual o tipo de solo no local (argiloso, arenoso)?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_12" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_12" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_12" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_12" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">13. É uma área íngreme ou plana?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_13" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_13" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_13" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_13" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">14. Produtos envolvidos no acidente poderiam ter se deslocado para áreas distantes?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_14" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_14" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_14" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_14" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">15. A empresa fez o plantio de espécies? (Quais, espaçamento, altura, quant.)</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_15" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_15" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_15" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_15" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">16. Condições relatadas nos relatórios enviados condizem com a realidade?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_16" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_16" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_16" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_16" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">17. Há indícios de erosão causada ou resposta ao acidente? (Observar drenagem)</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_17" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_17" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_17" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_17" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">18. Há indícios de assoreamento em curso d'água?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_18" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_18" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_18" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_18" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">19. Como está a manutenção da linha férrea no local? (Observar dormentes)</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_19" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_19" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_19" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_19" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">20. Como é o acesso ao local?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_20" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_20" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_20" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_20" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">21. Qual à distância à base mais próxima? Possível calcular o tempo?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_21" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_21" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_21" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_21" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">22. Há resíduos no local? Como são esses resíduos? Qual o volume?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_22" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_22" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_22" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_22" placeholder="Observações para este item...">
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">23. Há pedaços de maquinário, sucata ou materiais inservíveis abandonados?</div>
+                <div class="options-group">
+                    <label class="option-label"><input type="radio" name="p_23" value="SIM"> SIM</label>
+                    <label class="option-label"><input type="radio" name="p_23" value="NÃO"> NÃO</label>
+                    <label class="option-label"><input type="radio" name="p_23" value="N.A."> N.A.</label>
+                </div>
+                <input type="text" class="obs-input" id="obs_23" placeholder="Observações para este item...">
+            </div>
+        </div>
+<div style="padding:25px;border-top:1px solid #ddd;">
+
+    <h3 style="margin-bottom:15px;color:#064516;">
+        Registro de Pontos Georreferenciados
+    </h3>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+
+        <div>
+            <label>Item da Não Conformidade</label>
+            <select id="itemGPS" style="width:100%;padding:8px;">
+                <option value="">Selecione...</option>
+            </select>
+        </div>
+
+        <div style="display:flex;align-items:flex-end;">
+            <button
+                type="button"
+                onclick="registrarPonto()"
+                style="padding:10px;background:#064516;color:white;border:none;border-radius:4px;">
+                Registrar Ponto GPS
+            </button>
+        </div>
+
+    </div>
+
+    <div id="listaPontos"
+         style="margin-top:15px;font-size:13px;">
+    </div>
+
+</div>
+        <div class="general-obs">
+            <div class="field-group">
+                <label style="font-size:15px; margin-bottom:10px; font-weight:bold;">Observações Gerais (Tombamento/Descarrilamento):</label>
+                <textarea id="obs_gerais" placeholder="Digite aqui observações adicionais sobre a vistoria..."></textarea>
+            </div>
+        </div>
+
+        <div class="footer-notes">
+            <strong>Orientações Técnicas de Campo:</strong><br>
+            1. Tirar fotos de todos os itens observados.<br>
+            2. Sempre que observar alguma irregularidade, gerar o ponto correspondente com as coordenadas geográficas.
+        </div>
+
+        <div class="btn-container">
+           <!-- Botão de exportar que agora aciona a janela de impressão/PDF do tablet -->
+            <button type="button" class="btn-submit" onclick="gerarPDF()">Exportar Relatório em PDF</button>
+            <!-- Botão de limpar com estilo de alerta vermelho -->
+            <button type="button" class="btn-clear" onclick="limparFormulario()">Limpar Questionário</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function exportarRelatorio() {
+        let txt = "=========================================================\n";
+        txt += "     RELATÓRIO DE MONITORAMENTO DE ACIDENTE FERROVIÁRIO     \n";
+        txt += "=========================================================\n\n";
+        txt += `Agente de Emergências Ambientais: ${document.getElementById('agente').value}\n`;
+        txt += `Data da Vistoria: ${document.getElementById('data_vistoria').value}\n`;
+        txt += `Empresa: ${document.getElementById('empresa').value}\n`;
+        txt += `CNPJ: ${document.getElementById('cnpj').value}\n`;
+        txt += `Município: ${document.getElementById('municipio').value}\n`;
+        txt += `Coordenadas: ${document.getElementById('coordenadas').value}\n\n`;
+        txt += "---------------------------------------------------------\n";
+        
+        for (let i = 1; i <= 23; i++) {
+            const card = document.querySelector(`.question-card:nth-child(${i})`);
+            if(card) {
+                const labelText = card.querySelector('.question-text').innerText;
+                const rSelected = document.querySelector(`input[name="p_${i}"]:checked`);
+                const resposta = rSelected ? rSelected.value : "Não respondido";
+                const obs = document.getElementById(`obs_${i}`).value || "Sem observações";
+                txt += `${labelText}\n  Resposta: ${resposta}\n  Observação: ${obs}\n\n`;
+            }
+        }
+        
+        txt += "---------------------------------------------------------\n";
+        txt += `Observações Gerais:\n${document.getElementById('obs_gerais').value || "Nenhuma."}\n`;
+txt += "\n";
+txt += "PONTOS GEOREFERENCIADOS\n";
+txt += "=======================\n";
+
+pontosGPS.forEach(function(ponto, idx){
+
+    txt +=
+        `Ponto ${idx+1}\n`;
+
+    txt +=
+        `Item: ${ponto.item}\n`;
+
+    txt +=
+        `Latitude: ${ponto.latitude}\n`;
+
+    txt +=
+        `Longitude: ${ponto.longitude}\n`;
+
+    txt +=
+        `Precisão: ${ponto.precisao} m\n`;
+
+    txt +=
+        `Data/Hora: ${ponto.dataHora}\n\n`;
+
+});
+        txt += "=========================================================\n";
+        
+        const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `Relatorio_Vistoria_Ferrovia_${new Date().toISOString().slice(0,10)}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+// Função que aciona a janela nativa do tablet para Salvar como PDF
+    function gerarPDF() {
+        window.print();
+    }
+
+    // Função que limpa o formulário com a caixa de confirmação de segurança
+    function limparFormulario() {
+
+    const confirmar = confirm(
+        "Tem certeza absoluta de que deseja apagar todas as respostas, observações e pontos GPS registrados?"
+    );
+
+    if (confirmar) {
+
+        // Limpa todos os campos do formulário
+        document.getElementById("formMonitoramento").reset();
+
+        // Limpa o array de pontos georreferenciados
+        pontosGPS = [];
+
+        // Limpa a lista exibida na tela
+        const lista =
+            document.getElementById("listaPontos");
+
+        if (lista) {
+            lista.innerHTML = "";
+        }
+
+        // Limpa o seletor de item
+        const itemGPS =
+            document.getElementById("itemGPS");
+
+        if (itemGPS) {
+            itemGPS.selectedIndex = 0;
+        }
+
+        // Atualiza data automaticamente
+        const campoData =
+            document.getElementById("data_vistoria");
+
+        if (campoData) {
+
+            const hoje = new Date();
+
+            campoData.value =
+                hoje.getFullYear() + "-" +
+                String(hoje.getMonth() + 1).padStart(2, "0") + "-" +
+                String(hoje.getDate()).padStart(2, "0");
+        }
+
+        // Captura novamente a posição atual
+        if (typeof capturarGPS === "function") {
+            capturarGPS();
+        }
+
+        // Volta ao topo
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+}
+// ==========================================
+// GPS AUTOMÁTICO
+// ==========================================
+
+function capturarGPS() {
+
+    const campo = document.getElementById("coordenadas");
+    const status = document.getElementById("gpsStatus");
+
+    campo.value = "Obtendo localização...";
+    status.innerHTML = "Consultando GPS...";
+
+    if (!navigator.geolocation) {
+
+        campo.value = "";
+        status.innerHTML = "GPS não suportado pelo dispositivo.";
+        return;
+
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(posicao) {
+
+            const latitude = posicao.coords.latitude;
+            const longitude = posicao.coords.longitude;
+            const precisao = Math.round(posicao.coords.accuracy);
+
+            campo.value =
+                latitude.toFixed(6) +
+                ", " +
+                longitude.toFixed(6);
+
+            status.innerHTML =
+                "Precisão aproximada: " +
+                precisao +
+                " metros";
+
+        },
+
+        function(erro) {
+
+            campo.value = "";
+
+            switch (erro.code) {
+
+                case erro.PERMISSION_DENIED:
+                    status.innerHTML =
+                        "Permissão para GPS negada.";
+                    break;
+
+                case erro.POSITION_UNAVAILABLE:
+                    status.innerHTML =
+                        "Posição indisponível.";
+                    break;
+
+                case erro.TIMEOUT:
+                    status.innerHTML =
+                        "Tempo esgotado.";
+                    break;
+
+                default:
+                    status.innerHTML =
+                        "Erro ao obter localização.";
+            }
+
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+
+    );
+}
+
+// ==========================================
+// INICIALIZAÇÃO
+// ==========================================
+
+window.addEventListener("load", function() {
+
+    capturarGPS();
+
+    const campoData =
+        document.getElementById("data_vistoria");
+
+    if (campoData && !campoData.value) {
+
+        const hoje = new Date();
+
+        const dataFormatada =
+            hoje.getFullYear() +
+            "-" +
+            String(hoje.getMonth() + 1).padStart(2, "0") +
+            "-" +
+            String(hoje.getDate()).padStart(2, "0");
+
+        campoData.value = dataFormatada;
+    }
+
+});
+// ======================================
+// BANCO DE PONTOS GEOREFERENCIADOS
+// ======================================
+
+let pontosGPS = [];
+
+// ======================================
+// CARREGA ITENS DO CHECKLIST
+// ======================================
+
+window.addEventListener("load", function() {
+
+    const select = document.getElementById("itemGPS");
+
+    for (let i = 1; i <= 23; i++) {
+
+        const pergunta =
+            document.querySelector(
+                `.question-card:nth-child(${i}) .question-text`
+            );
+
+        if (pergunta) {
+
+            const option =
+                document.createElement("option");
+
+            option.value = i;
+
+            option.text =
+                "Item " +
+                i +
+                " - " +
+                pergunta.innerText.substring(0,60);
+
+            select.appendChild(option);
+        }
+    }
+
+});
+function registrarPonto() {
+
+    const item =
+        document.getElementById("itemGPS").value;
+
+    if (!item) {
+
+        alert(
+            "Selecione primeiro o item da não conformidade."
+        );
+
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(posicao) {
+
+            const registro = {
+
+                item: item,
+
+                latitude:
+                    posicao.coords.latitude.toFixed(6),
+
+                longitude:
+                    posicao.coords.longitude.toFixed(6),
+
+                precisao:
+                    Math.round(
+                        posicao.coords.accuracy
+                    ),
+
+                dataHora:
+                    new Date()
+                    .toLocaleString("pt-BR")
+
+            };
+
+            pontosGPS.push(registro);
+
+            atualizarListaPontos();
+
+            alert("Ponto registrado com sucesso.");
+
+        },
+
+        function() {
+
+            alert(
+                "Não foi possível obter a localização."
+            );
+
+        },
+
+        {
+            enableHighAccuracy:true
+        }
+
+    );
+}
+function atualizarListaPontos() {
+
+    const lista =
+        document.getElementById("listaPontos");
+
+    lista.innerHTML = "";
+
+    pontosGPS.forEach(function(ponto,index){
+
+        lista.innerHTML += `
+
+        <div style="
+            padding:10px;
+            margin-bottom:6px;
+            border:1px solid #ddd;
+            border-radius:4px;
+            background:#fafafa;">
+
+            <strong>Ponto ${index+1}</strong><br>
+
+            Item: ${ponto.item}<br>
+
+            Coordenadas:
+            ${ponto.latitude},
+            ${ponto.longitude}<br>
+
+            Precisão:
+            ${ponto.precisao} m<br>
+
+            Data/Hora:
+            ${ponto.dataHora}
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+</body>
+</html>

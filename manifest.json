@@ -1,0 +1,8 @@
+{
+  "name": "Monitoramento Ferroviario IBAMA",
+  "short_name": "IBAMA Ferrovia",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#064516"
+}
