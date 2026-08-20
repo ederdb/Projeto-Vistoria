@@ -50,12 +50,37 @@
         
         /* Ajustes automáticos para que o PDF gerado ignore os botões e saia perfeito */
         @media print {
-            body { background-color: #ffffff; padding: 0; }
-            .container { box-shadow: none; border-top: none; max-width: 100%; }
-            .btn-container, .footer-notes { display: none !important; }
-            input[type="text"], textarea { border: none !important; background: transparent !important; padding: 0 !important; }
-            input[type="radio"] { accent-color: #000 !important; }
-        }
+
+    body {
+        background-color: #ffffff;
+        padding: 0;
+    }
+
+    .container {
+        box-shadow: none;
+        border-top: none;
+        max-width: 100%;
+    }
+
+    .btn-container,
+    .footer-notes,
+    .no-print {
+        display: none !important;
+    }
+
+    input[type="text"],
+    textarea {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    input[type="radio"] {
+        accent-color: #000 !important;
+    }
+
+}
+
     </style>
 </head>
 <body>
@@ -71,16 +96,34 @@
         <div class="section-info">
             <div class="grid-info">
                 <div class="field-group">
-                    <label>Agente de Emergências Ambientais</label>
-                    <input type="text" id="agente" placeholder="Nome completo">
-                </div>
+    <label>AAF / AEA</label>
+    <input
+        type="text"
+        id="agente"
+        placeholder="Nome completo do servidor">
+</div>
+
+<div class="field-group">
+    <label>Matrícula SIAPE</label>
+    <input
+        type="text"
+        id="matricula"
+        placeholder="Ex.: 1234567">
+</div>
+<div class="field-group">
+    <label>Unidade de Lotação</label>
+    <input
+        type="text"
+        id="lotacao"
+        placeholder="Ex.: NLA/SP, SUPES/SP, CENEAC">
+</div>
+         <div class="field-group">
+                    <label>Nome da Empresa</label>
+                    <input type="text" id="empresa" placeholder="Razão social">
+                </div>        
                 <div class="field-group">
                     <label>Data da Vistoria</label>
                     <input type="date" id="data_vistoria">
-                </div>
-                <div class="field-group">
-                    <label>Nome da Empresa</label>
-                    <input type="text" id="empresa" placeholder="Razão social">
                 </div>
                 <div class="field-group">
                     <label>CNPJ</label>
@@ -100,22 +143,26 @@
         readonly>
 
     <button
-        type="button"
-        onclick="capturarGPS()"
-        style="margin-top:8px;
-               padding:8px;
-               background:#064516;
-               color:white;
-               border:none;
-               border-radius:4px;
-               cursor:pointer;">
-        Atualizar GPS
-    </button>
+    type="button"
+    onclick="capturarGPS()"
+    class="no-print"
+    style="margin-top:8px;
+           padding:8px;
+           background:#064516;
+           color:white;
+           border:none;
+           border-radius:4px;
+           cursor:pointer;">
+    Atualizar GPS
+</button>
 
-    <small id="gpsStatus"
-           style="margin-top:5px;color:#666;">
-        Aguardando localização...
-    </small>
+    <small
+    id="gpsStatus"
+    class="no-print"
+    style="margin-top:5px;color:#666;">
+    Aguardando localização...
+</small>
+
 </div>
 
             </div>
@@ -123,14 +170,17 @@
 
         <div class="questions-list">
             <div class="question-card">
-                <div class="question-text">01. Qual a área (ha) afetada pelo acidente? (Delimitar faixa de domínio)</div>
-                <div class="options-group">
-                    <label class="option-label"><input type="radio" name="p_1" value="SIM"> SIM</label>
-                    <label class="option-label"><input type="radio" name="p_1" value="NÃO"> NÃO</label>
-                    <label class="option-label"><input type="radio" name="p_1" value="N.A."> N.A.</label>
-                </div>
-                <input type="text" class="obs-input" id="obs_1" placeholder="Observações para este item...">
-            </div>
+    <div class="question-text">
+        01. Qual a área (ha) afetada pelo acidente? (Delimitar faixa de domínio)
+    </div>
+
+    <input
+        type="number"
+        step="0.01"
+        class="obs-input"
+        id="area_afetada"
+        placeholder="Área afetada em hectares (ha)">
+</div>
 
             <div class="question-card">
                 <div class="question-text">02. O solo está exposto?</div>
@@ -223,34 +273,55 @@
             </div>
 
             <div class="question-card">
-                <div class="question-text">11. Qual o tipo de vegetação do local?</div>
-                <div class="options-group">
-                    <label class="option-label"><input type="radio" name="p_11" value="SIM"> SIM</label>
-                    <label class="option-label"><input type="radio" name="p_11" value="NÃO"> NÃO</label>
-                    <label class="option-label"><input type="radio" name="p_11" value="N.A."> N.A.</label>
-                </div>
-                <input type="text" class="obs-input" id="obs_11" placeholder="Observações para este item...">
-            </div>
+    <div class="question-text">
+        11. Qual o tipo de vegetação do local?
+    </div>
+
+    <input
+        type="text"
+        class="obs-input"
+        id="vegetacao"
+        placeholder="Ex.: Cerrado, Mata Ciliar, Pastagem, Vegetação Secundária">
+</div>
 
             <div class="question-card">
-                <div class="question-text">12. Qual o tipo de solo no local (argiloso, arenoso)?</div>
-                <div class="options-group">
-                    <label class="option-label"><input type="radio" name="p_12" value="SIM"> SIM</label>
-                    <label class="option-label"><input type="radio" name="p_12" value="NÃO"> NÃO</label>
-                    <label class="option-label"><input type="radio" name="p_12" value="N.A."> N.A.</label>
-                </div>
-                <input type="text" class="obs-input" id="obs_12" placeholder="Observações para este item...">
-            </div>
+    <div class="question-text">
+        12. Qual o tipo de solo no local?
+    </div>
+
+    <select
+        id="tipo_solo"
+        class="obs-input">
+
+        <option value="">Selecione...</option>
+        <option>Argiloso</option>
+        <option>Arenoso</option>
+        <option>Siltoso</option>
+        <option>Pedregoso</option>
+        <option>Misto</option>
+        <option>Outro</option>
+
+    </select>
+</div>
 
             <div class="question-card">
-                <div class="question-text">13. É uma área íngreme ou plana?</div>
-                <div class="options-group">
-                    <label class="option-label"><input type="radio" name="p_13" value="SIM"> SIM</label>
-                    <label class="option-label"><input type="radio" name="p_13" value="NÃO"> NÃO</label>
-                    <label class="option-label"><input type="radio" name="p_13" value="N.A."> N.A.</label>
-                </div>
-                <input type="text" class="obs-input" id="obs_13" placeholder="Observações para este item...">
-            </div>
+    <div class="question-text">
+        13. Como é o relevo da área?
+    </div>
+
+    <select
+        id="relevo"
+        class="obs-input">
+
+        <option value="">Selecione...</option>
+        <option>Plano</option>
+        <option>Suave Ondulado</option>
+        <option>Ondulado</option>
+        <option>Fortemente Ondulado</option>
+        <option>Íngreme</option>
+
+    </select>
+</div>
 
             <div class="question-card">
                 <div class="question-text">14. Produtos envolvidos no acidente poderiam ter se deslocado para áreas distantes?</div>
@@ -263,7 +334,7 @@
             </div>
 
             <div class="question-card">
-                <div class="question-text">15. A empresa fez o plantio de espécies? (Quais, espaçamento, altura, quant.)</div>
+                <div class="question-text">15. A empresa fez o plantio de espécies? (Quais, espaçamento, altura, quantidade)</div>
                 <div class="options-group">
                     <label class="option-label"><input type="radio" name="p_15" value="SIM"> SIM</label>
                     <label class="option-label"><input type="radio" name="p_15" value="NÃO"> NÃO</label>
@@ -303,44 +374,89 @@
             </div>
 
             <div class="question-card">
-                <div class="question-text">19. Como está a manutenção da linha férrea no local? (Observar dormentes)</div>
+                <div class="question-text">19. Como está a manutenção da linha férrea no local? (Observar dormentes, fixações, junções)</div>
                 <div class="options-group">
-                    <label class="option-label"><input type="radio" name="p_19" value="SIM"> SIM</label>
-                    <label class="option-label"><input type="radio" name="p_19" value="NÃO"> NÃO</label>
-                    <label class="option-label"><input type="radio" name="p_19" value="N.A."> N.A.</label>
+                    <label class="option-label"><input type="radio" name="p_19" value="BOA"> BOA</label>
+                    <label class="option-label"><input type="radio" name="p_19" value="RUIM"> RUIM</label>
+                    <label class="option-label"><input type="radio" name="p_19" value="OUTROS"> OUTROS</label>
                 </div>
                 <input type="text" class="obs-input" id="obs_19" placeholder="Observações para este item...">
             </div>
 
             <div class="question-card">
-                <div class="question-text">20. Como é o acesso ao local?</div>
-                <div class="options-group">
-                    <label class="option-label"><input type="radio" name="p_20" value="SIM"> SIM</label>
-                    <label class="option-label"><input type="radio" name="p_20" value="NÃO"> NÃO</label>
-                    <label class="option-label"><input type="radio" name="p_20" value="N.A."> N.A.</label>
-                </div>
-                <input type="text" class="obs-input" id="obs_20" placeholder="Observações para este item...">
-            </div>
+    <div class="question-text">
+        20. Como é o acesso ao local?
+    </div>
+
+    <textarea
+        id="acesso_local"
+        class="obs-input"
+        style="height:80px;"
+        placeholder="Descreva as condições de acesso, estradas, restrições e dificuldades encontradas."></textarea>
+</div>
 
             <div class="question-card">
-                <div class="question-text">21. Qual à distância à base mais próxima? Possível calcular o tempo?</div>
-                <div class="options-group">
-                    <label class="option-label"><input type="radio" name="p_21" value="SIM"> SIM</label>
-                    <label class="option-label"><input type="radio" name="p_21" value="NÃO"> NÃO</label>
-                    <label class="option-label"><input type="radio" name="p_21" value="N.A."> N.A.</label>
-                </div>
-                <input type="text" class="obs-input" id="obs_21" placeholder="Observações para este item...">
-            </div>
+    <div class="question-text">
+        21. Qual a distância à base mais próxima e o tempo estimado de deslocamento?
+    </div>
+
+    <input
+        type="number"
+        class="obs-input"
+        id="distancia_base"
+        placeholder="Distância em quilômetros (km)">
+
+    <input
+        type="number"
+        class="obs-input"
+        id="tempo_deslocamento"
+        placeholder="Tempo estimado em minutos"
+        style="margin-top:10px;">
+</div>
 
             <div class="question-card">
-                <div class="question-text">22. Há resíduos no local? Como são esses resíduos? Qual o volume?</div>
-                <div class="options-group">
-                    <label class="option-label"><input type="radio" name="p_22" value="SIM"> SIM</label>
-                    <label class="option-label"><input type="radio" name="p_22" value="NÃO"> NÃO</label>
-                    <label class="option-label"><input type="radio" name="p_22" value="N.A."> N.A.</label>
-                </div>
-                <input type="text" class="obs-input" id="obs_22" placeholder="Observações para este item...">
-            </div>
+    <div class="question-text">
+        22. Há resíduos no local? Como são esses resíduos? Qual o volume?
+    </div>
+
+    <div class="options-group">
+        <label class="option-label">
+            <input type="radio" name="residuos" value="SIM">
+            SIM
+        </label>
+
+        <label class="option-label">
+            <input type="radio" name="residuos" value="NÃO">
+            NÃO
+        </label>
+    </div>
+
+    <input
+        type="text"
+        class="obs-input"
+        id="tipo_residuo"
+        placeholder="Descreva os resíduos encontrados">
+
+    <input
+        type="number"
+        class="obs-input"
+        id="volume_residuo"
+        placeholder="Volume estimado"
+        style="margin-top:10px;">
+
+    <select
+        id="unidade_volume"
+        class="obs-input"
+        style="margin-top:10px;">
+
+        <option value="">Unidade</option>
+        <option>kg</option>
+        <option>m³</option>
+        <option>Litros</option>
+        <option>Toneladas</option>
+
+    </select>
+</div>
 
             <div class="question-card">
                 <div class="question-text">23. Há pedaços de maquinário, sucata ou materiais inservíveis abandonados?</div>
@@ -383,6 +499,26 @@
     </div>
 
 </div>
+<div style="padding:25px;border-top:1px solid #ddd;">
+
+    <h3 style="color:#064516;margin-bottom:15px;">
+        Evidências Fotográficas
+    </h3>
+
+    <input
+    type="file"
+    id="fotos"
+    accept="image/*"
+    capture="environment">
+
+    <div id="galeria"
+         style="margin-top:15px;
+                display:flex;
+                flex-wrap:wrap;
+                gap:10px;">
+    </div>
+
+</div>
         <div class="general-obs">
             <div class="field-group">
                 <label style="font-size:15px; margin-bottom:10px; font-weight:bold;">Observações Gerais (Tombamento/Descarrilamento):</label>
@@ -410,7 +546,8 @@
         let txt = "=========================================================\n";
         txt += "     RELATÓRIO DE MONITORAMENTO DE ACIDENTE FERROVIÁRIO     \n";
         txt += "=========================================================\n\n";
-        txt += `Agente de Emergências Ambientais: ${document.getElementById('agente').value}\n`;
+        txt += `AAF / AEA: ${document.getElementById('agente').value}\n`;
+        txt += `Matrícula: ${document.getElementById('matricula').value}\n`;
         txt += `Data da Vistoria: ${document.getElementById('data_vistoria').value}\n`;
         txt += `Empresa: ${document.getElementById('empresa').value}\n`;
         txt += `CNPJ: ${document.getElementById('cnpj').value}\n`;
@@ -772,7 +909,49 @@ function atualizarListaPontos() {
     });
 
 }
+document
+    .getElementById("fotos")
+    .addEventListener("change", carregarFotos);
 
+function carregarFotos(evento) {
+
+    const galeria =
+        document.getElementById("galeria");
+
+    galeria.innerHTML = "";
+
+    const arquivos =
+        evento.target.files;
+
+    for(let i=0; i < arquivos.length; i++) {
+
+        const leitor =
+            new FileReader();
+
+        leitor.onload = function(e) {
+
+            const img =
+                document.createElement("img");
+
+            img.src = e.target.result;
+
+            img.style.width = "120px";
+            img.style.height = "120px";
+            img.style.objectFit = "cover";
+            img.style.borderRadius = "6px";
+            img.style.border = "1px solid #ccc";
+
+            galeria.appendChild(img);
+
+        };
+
+        leitor.readAsDataURL(
+            arquivos[i]
+        );
+
+    }
+
+}
 </script>
 <script>
 if ('serviceWorker' in navigator) {
