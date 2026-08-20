@@ -659,6 +659,44 @@ pontosGPS.forEach(function(ponto, idx){
 
 }
 // ==========================================
+// CONVERSÃO PARA GRAU, MINUTO E SEGUNDO
+// ==========================================
+
+function decimalParaGMS(coordenada, tipo) {
+
+    const abs = Math.abs(coordenada);
+
+    const graus = Math.floor(abs);
+
+    const minutosFloat =
+        (abs - graus) * 60;
+
+    const minutos =
+        Math.floor(minutosFloat);
+
+    const segundos =
+        ((minutosFloat - minutos) * 60)
+        .toFixed(2);
+
+    let hemisferio = "";
+
+    if (tipo === "lat") {
+
+        hemisferio =
+            coordenada >= 0 ? "N" : "S";
+
+    } else {
+
+        hemisferio =
+            coordenada >= 0 ? "E" : "W";
+
+    }
+
+    return `${graus}° ${minutos}' ${segundos}" ${hemisferio}`;
+
+}
+
+// ==========================================
 // GPS AUTOMÁTICO
 // ==========================================
 
@@ -686,10 +724,16 @@ function capturarGPS() {
             const longitude = posicao.coords.longitude;
             const precisao = Math.round(posicao.coords.accuracy);
 
-            campo.value =
-                latitude.toFixed(6) +
-                ", " +
-                longitude.toFixed(6);
+         const latitudeGMS =
+    decimalParaGMS(latitude, "lat");
+
+const longitudeGMS =
+    decimalParaGMS(longitude, "lon");
+
+campo.value =
+    latitudeGMS +
+    " | " +
+    longitudeGMS;
 
             status.innerHTML =
                 "Precisão aproximada: " +
