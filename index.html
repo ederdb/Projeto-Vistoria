@@ -507,7 +507,9 @@
 <div id="listaPontos"
      style="margin-top:15px;font-size:13px;">
 </div>
-
+        </div>
+    </div>
+</div>
         <div class="general-obs">
             <div class="field-group">
                 <label style="font-size:15px; margin-bottom:10px; font-weight:bold;">Observações Gerais (Tombamento/Descarrilamento):</label>
@@ -763,7 +765,7 @@ window.addEventListener("load", function() {
 // BANCO DE PONTOS GEOREFERENCIADOS
 // ======================================
 
-let ocorrencias = [];
+let pontosGPS = [];
 
 // ======================================
 // CARREGA ITENS DO CHECKLIST
@@ -898,24 +900,7 @@ function atualizarListaPontos() {
     });
 
 }
-document
-    .getElementById("fotos")
-    .addEventListener("change", carregarFotos);
 
-function carregarFotos(evento) {
-
-    const galeria =
-        document.getElementById("galeria");
-
-    const arquivos =
-        evento.target.files;
-
-    for(let i=0; i < arquivos.length; i++) {
-
-        ...
-    }
-
-}
 </script>
 <script>
 if ('serviceWorker' in navigator) {
