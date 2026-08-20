@@ -180,6 +180,8 @@
         class="obs-input"
         id="area_afetada"
         placeholder="Área afetada em hectares (ha)">
+                 <input type="text" class="obs-input" id="obs_9" placeholder="Observações para este item...">
+            </div>
 </div>
 
             <div class="question-card">
@@ -203,7 +205,7 @@
             </div>
 
             <div class="question-card">
-                <div class="question-text">04. Existe vestígio de óleo na vegetação?</div>
+                <div class="question-text">04. Existe vestígio de óleo ou outro produto na vegetação?</div>
                 <div class="options-group">
                     <label class="option-label"><input type="radio" name="p_4" value="SIM"> SIM</label>
                     <label class="option-label"><input type="radio" name="p_4" value="NÃO"> NÃO</label>
@@ -233,7 +235,7 @@
             </div>
 
             <div class="question-card">
-                <div class="question-text">07. Existe odor de óleo ou outro produto químico no local?</div>
+                <div class="question-text">07. Existe odor de óleo ou outro produto no local?</div>
                 <div class="options-group">
                     <label class="option-label"><input type="radio" name="p_7" value="SIM"> SIM</label>
                     <label class="option-label"><input type="radio" name="p_7" value="NÃO"> NÃO</label>
@@ -243,7 +245,7 @@
             </div>
 
             <div class="question-card">
-                <div class="question-text">08. Existe vestígio de óleo na água (iridescência/brilho)?</div>
+                <div class="question-text">08. Existe vestígio de óleo ou outro produto na água (iridescência/brilho)?</div>
                 <div class="options-group">
                     <label class="option-label"><input type="radio" name="p_8" value="SIM"> SIM</label>
                     <label class="option-label"><input type="radio" name="p_8" value="NÃO"> NÃO</label>
@@ -253,7 +255,7 @@
             </div>
 
             <div class="question-card">
-                <div class="question-text">09. Existe vestígio de óleo no solo superficial?</div>
+                <div class="question-text">09. Existe vestígio de óleo ou outro produto no solo superficial?</div>
                 <div class="options-group">
                     <label class="option-label"><input type="radio" name="p_9" value="SIM"> SIM</label>
                     <label class="option-label"><input type="radio" name="p_9" value="NÃO"> NÃO</label>
@@ -314,11 +316,13 @@
         class="obs-input">
 
         <option value="">Selecione...</option>
-        <option>Plano</option>
-        <option>Suave Ondulado</option>
-        <option>Ondulado</option>
-        <option>Fortemente Ondulado</option>
-        <option>Íngreme</option>
+        <option>Plano: declividade de 0 - 3%</option>
+        <option>Suave Ondulado: declividade de 3 - 8%</option>
+        <option>Ondulado: declividade de 8 - 20%</option>
+        <option>Forte Ondulado: declividade de 20 - 45%</option>
+        <option>Montanhoso: declividade de 45 - 75%</option>
+        <option>Escarpado: declividade maior que 75%</option>
+
 
     </select>
 </div>
