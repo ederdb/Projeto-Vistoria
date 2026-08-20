@@ -478,47 +478,36 @@
 
         <div>
             <label>Item da Não Conformidade</label>
-            <select id="itemGPS" style="width:100%;padding:8px;">
-                <option value="">Selecione...</option>
-            </select>
-        </div>
 
-        <div style="display:flex;align-items:flex-end;">
-            <button
-                type="button"
-                onclick="registrarPonto()"
-                style="padding:10px;background:#064516;color:white;border:none;border-radius:4px;">
-                Registrar Ponto GPS
-            </button>
-        </div>
+<select id="itemGPS" style="width:100%;padding:8px;">
+    <option value="">Selecione...</option>
+</select>
 
-    </div>
-
-    <div id="listaPontos"
-         style="margin-top:15px;font-size:13px;">
-    </div>
-
-</div>
-<div style="padding:25px;border-top:1px solid #ddd;">
-
-    <h3 style="color:#064516;margin-bottom:15px;">
-        Evidências Fotográficas
-    </h3>
-
-    <input
+<input
     type="file"
-    id="fotos"
+    id="fotoOcorrencia"
     accept="image/*"
-    capture="environment">
+    capture="environment"
+    style="display:none;">
 
-    <div id="galeria"
-         style="margin-top:15px;
-                display:flex;
-                flex-wrap:wrap;
-                gap:10px;">
-    </div>
+<div style="display:flex;align-items:flex-end;margin-top:10px;">
+
+    <button
+        type="button"
+        onclick="registrarOcorrencia()"
+        class="no-print"
+        style="padding:10px;background:#064516;color:white;border:none;border-radius:4px;">
+
+        Registrar Ocorrência
+
+    </button>
 
 </div>
+
+<div id="listaPontos"
+     style="margin-top:15px;font-size:13px;">
+</div>
+
         <div class="general-obs">
             <div class="field-group">
                 <label style="font-size:15px; margin-bottom:10px; font-weight:bold;">Observações Gerais (Tombamento/Descarrilamento):</label>
@@ -528,7 +517,7 @@
 
         <div class="footer-notes">
             <strong>Orientações Técnicas de Campo:</strong><br>
-            1. Tirar fotos de todos os itens observados.<br>
+            1. Tirar s de todos os itens observados.<br>
             2. Sempre que observar alguma irregularidade, gerar o ponto correspondente com as coordenadas geográficas.
         </div>
 
@@ -774,7 +763,7 @@ window.addEventListener("load", function() {
 // BANCO DE PONTOS GEOREFERENCIADOS
 // ======================================
 
-let pontosGPS = [];
+let ocorrencias = [];
 
 // ======================================
 // CARREGA ITENS DO CHECKLIST
@@ -918,37 +907,12 @@ function carregarFotos(evento) {
     const galeria =
         document.getElementById("galeria");
 
-    galeria.innerHTML = "";
-
     const arquivos =
         evento.target.files;
 
     for(let i=0; i < arquivos.length; i++) {
 
-        const leitor =
-            new FileReader();
-
-        leitor.onload = function(e) {
-
-            const img =
-                document.createElement("img");
-
-            img.src = e.target.result;
-
-            img.style.width = "120px";
-            img.style.height = "120px";
-            img.style.objectFit = "cover";
-            img.style.borderRadius = "6px";
-            img.style.border = "1px solid #ccc";
-
-            galeria.appendChild(img);
-
-        };
-
-        leitor.readAsDataURL(
-            arquivos[i]
-        );
-
+        ...
     }
 
 }
@@ -956,6 +920,97 @@ function carregarFotos(evento) {
 <script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js');
+}
+    function registrarOcorrencia() {
+
+    const item =
+        document.getElementById("itemGPS").value;
+
+    if (!item) {
+
+        alert(
+            "Selecione primeiro o item da não conformidade."
+        );
+
+        return;
+    }
+
+    const fotoInput =
+        document.getElementById("fotoOcorrencia");
+
+    fotoInput.onchange = function() {
+
+        const arquivo =
+            fotoInput.files[0];
+
+        if (!arquivo) {
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+
+            function(posicao) {
+
+                const leitor =
+                    new FileReader();
+
+                leitor.onload = function(e) {
+
+                    const registro = {
+
+                        item: item,
+
+                        foto: e.target.result,
+
+                        latitude:
+                            posicao.coords.latitude.toFixed(6),
+
+                        longitude:
+                            posicao.coords.longitude.toFixed(6),
+
+                        precisao:
+                            Math.round(
+                                posicao.coords.accuracy
+                            ),
+
+                        dataHora:
+                            new Date()
+                            .toLocaleString("pt-BR")
+
+                    };
+
+                    pontosGPS.push(registro);
+
+                    atualizarListaPontos();
+
+                    alert(
+                        "Ocorrência registrada com sucesso."
+                    );
+
+                };
+
+                leitor.readAsDataURL(arquivo);
+
+            },
+
+            function() {
+
+                alert(
+                    "Não foi possível obter a localização."
+                );
+
+            },
+
+            {
+                enableHighAccuracy: true
+            }
+
+        );
+
+    };
+
+    fotoInput.click();
+
 }
 </script>
 </body>
