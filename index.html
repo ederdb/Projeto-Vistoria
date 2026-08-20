@@ -893,13 +893,20 @@ function atualizarListaPontos() {
             Data/Hora:
             ${ponto.dataHora}<br><br>
 
-            ${
-                ponto.foto
-                ?
-                `${ponto.foto}`
-                :
-                ""
-            }
+           ${
+    ponto.foto
+    ?
+    `<img
+        src="${ponto.foto}"
+        style="
+            max-width:200px;
+            margin-top:10px;
+            border-radius:6px;
+            border:1px solid #ccc;
+        ">`
+    :
+    ""
+}
 
         </div>
 
