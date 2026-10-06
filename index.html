@@ -715,8 +715,26 @@ function adicionarAgente() {
                 const labelText = card.querySelector('.question-text').innerText;
                 const rSelected = document.querySelector(`input[name="p_${i}"]:checked`);
                 const resposta = rSelected ? rSelected.value : "Não respondido";
-                const obs = document.getElementById(`obs_${i}`).value || "Sem observações";
-                txt += `${labelText}\n  Resposta: ${resposta}\n  Observação: ${obs}\n\n`;
+                const campoObs = document.getElementById(`obs_${i}`);
+const obs = campoObs ? campoObs.value || "Sem observações" : "Sem observações";
+
+if (i === 21) {
+
+    const distancia = document.getElementById("distancia_base").value;
+    const tempo = document.getElementById("tempo_deslocamento").value;
+
+    txt += `${labelText}\n`;
+    txt += `  Distância à base mais próxima: ${distancia ? distancia + " km" : "Não informada"}\n`;
+    txt += `  Tempo estimado de deslocamento: ${tempo ? tempo + " horas" : "Não informado"}\n`;
+    txt += `  Observação: ${obs}\n\n`;
+
+} else {
+
+    txt += `${labelText}\n`;
+    txt += `  Resposta: ${resposta}\n`;
+    txt += `  Observação: ${obs}\n\n`;
+}
+``
             }
         }
         
