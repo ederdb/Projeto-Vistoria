@@ -1050,33 +1050,33 @@ let pontosGPS = [];
 // ======================================
 
 window.addEventListener("load", function() {
-
-    const select = document.getElementById("itemGPS");
-
-    for (let i = 1; i <= 23; i++) {
-
-        const pergunta =
-            document.querySelector(
-                `.question-card:nth-child(${i}) .question-text`
-            );
-
-        if (pergunta) {
-
-            const option =
-                document.createElement("option");
-
-            option.value = i;
-
-            option.text =
-                "Item " +
-                i +
-                " - " +
-                pergunta.innerText.substring(0,60);
-
-            select.appendChild(option);
-        }
-    }
-
+ 
+const select = document.getElementById("itemGPS");
+ 
+// Evita duplicar itens caso a função seja executada novamente
+select.innerHTML = '<option value="">Selecione...</option>';
+ 
+// Busca diretamente todos os cards de perguntas
+const perguntas = document.querySelectorAll(
+".question-card .question-text"
+);
+ 
+perguntas.forEach(function(pergunta, index) {
+ 
+const numeroItem = index + 1;
+ 
+const option =
+document.createElement("option");
+ 
+option.value = numeroItem;
+ 
+option.text =
+pergunta.innerText.trim();
+ 
+select.appendChild(option);
+ 
+});
+ 
 });
 function registrarPonto() {
 
