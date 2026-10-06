@@ -603,6 +603,56 @@ maxlength="18">
 </div>
 
 <script>
+    <script>
+
+// ==========================================
+// ADICIONAR AAF / AEA
+// ==========================================
+
+function adicionarAgente() {
+
+    const lista = document.getElementById("listaAgentes");
+
+    const novoAgente = document.createElement("div");
+
+    novoAgente.className = "agente-item";
+
+    novoAgente.style.cssText =
+        "display:grid;" +
+        "grid-template-columns:2fr 1fr auto;" +
+        "gap:10px;" +
+        "margin-bottom:10px;" +
+        "align-items:center;";
+
+    novoAgente.innerHTML = `
+        <input
+            type="text"
+            class="agente-nome"
+            placeholder="Nome completo">
+
+        <input
+            type="text"
+            class="agente-matricula"
+            placeholder="Matrícula">
+
+        <button
+            type="button"
+            class="no-print"
+            onclick="this.parentElement.remove()"
+            style="
+                padding:8px 10px;
+                background:#b71c1c;
+                color:white;
+                border:none;
+                border-radius:4px;
+                cursor:pointer;">
+            Remover
+        </button>
+    `;
+
+    lista.appendChild(novoAgente);
+}
+
     document.addEventListener("input", function(event) {
 
     if (event.target.id === "cnpj") {
