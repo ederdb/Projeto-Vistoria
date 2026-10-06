@@ -574,6 +574,38 @@ maxlength="18">
 </div>
 
 <script>
+    document.addEventListener("input", function(event) {
+
+    if (event.target.id === "cnpj") {
+
+        let valor = event.target.value.replace(/\D/g, "");
+
+        valor = valor.substring(0, 14);
+
+        valor = valor.replace(
+            /^(\d{2})(\d)/,
+            "$1.$2"
+        );
+
+        valor = valor.replace(
+            /^(\d{2})\.(\d{3})(\d)/,
+            "$1.$2.$3"
+        );
+
+        valor = valor.replace(
+            /\.(\d{3})(\d)/,
+            ".$1/$2"
+        );
+
+        valor = valor.replace(
+            /(\d{4})(\d)/,
+            "$1-$2"
+        );
+
+        event.target.value = valor;
+    }
+
+});
     function exportarRelatorio() {
         let txt = "=========================================================\n";
         txt += "     RELATÓRIO DE MONITORAMENTO DE ACIDENTE FERROVIÁRIO     \n";
