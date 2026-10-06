@@ -1163,8 +1163,14 @@ if ('serviceWorker' in navigator) {
 }
     function registrarOcorrencia() {
 
-    const item =
-        document.getElementById("itemGPS").value;
+   const item =
+document.getElementById("itemGPS").value;
+ 
+const selectItem =
+document.getElementById("itemGPS");
+ 
+const nomeOcorrencia =
+selectItem.options[selectItem.selectedIndex].text;
 
     if (!item) {
 
