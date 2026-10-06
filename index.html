@@ -80,7 +80,45 @@
     }
 
 }
+/* ==========================================
+   AJUSTES PARA CELULAR
+   ========================================== */
 
+@media (max-width: 600px) {
+
+    /* AAF / AEA */
+    .agente-item {
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+    }
+
+    .agente-item input {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    /* Botão adicionar agente */
+    #listaAgentes + button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Campos gerais */
+    .field-group {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+        
     </style>
 </head>
 <body>
