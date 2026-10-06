@@ -1203,10 +1203,12 @@ selectItem.options[selectItem.selectedIndex].text;
                 leitor.onload = function(e) {
 
                     const registro = {
-
-                        item: item,
-
-                        foto: e.target.result,
+ 
+item: item,
+ 
+nomeOcorrencia: nomeOcorrencia,
+ 
+foto: e.target.result,
 
                         latitude:
                             posicao.coords.latitude.toFixed(6),
