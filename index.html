@@ -460,29 +460,34 @@ maxlength="18">
     placeholder="Observações complementares...">
 </div>
 
-            <div class="question-card">
+           <div class="question-card">
     <div class="question-text">
         21. Qual a distância à base mais próxima e o tempo estimado de deslocamento?
     </div>
 
     <input
         type="number"
+        step="0.1"
+        min="0"
         class="obs-input"
         id="distancia_base"
         placeholder="Distância em quilômetros (km)">
 
     <input
         type="number"
+        step="0.1"
+        min="0"
         class="obs-input"
         id="tempo_deslocamento"
-        placeholder="Tempo estimado em minutos"
+        placeholder="Tempo estimado em horas"
         style="margin-top:10px;">
-                <input
-    type="text"
-    class="obs-input"
-    id="obs_21"
-    placeholder="Observações complementares..."
-    style="margin-top:10px;">
+
+    <input
+        type="text"
+        class="obs-input"
+        id="obs_21"
+        placeholder="Observações complementares..."
+        style="margin-top:10px;">
 </div>
 
             <div class="question-card">
