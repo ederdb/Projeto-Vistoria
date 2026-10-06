@@ -95,20 +95,49 @@
     <form id="formMonitoramento">
         <div class="section-info">
             <div class="grid-info">
-                <div class="field-group">
-    <label>AAF / AEA</label>
-    <input
-        type="text"
-        id="agente"
-        placeholder="Nome completo do servidor">
-</div>
+               <div class="field-group" style="grid-column: 1 / -1;">
 
-<div class="field-group">
-    <label>Matrícula SIAPE</label>
-    <input
-        type="text"
-        id="matricula"
-        placeholder="Ex.: 1234567">
+    <label>AAF / AEA</label>
+
+    <div id="listaAgentes">
+
+        <div class="agente-item"
+             style="display:grid;
+                    grid-template-columns:2fr 1fr;
+                    gap:10px;
+                    margin-bottom:10px;">
+
+            <input
+                type="text"
+                class="agente-nome"
+                id="agente"
+                placeholder="Nome completo">
+
+            <input
+                type="text"
+                class="agente-matricula"
+                id="matricula"
+                placeholder="Matrícula">
+
+        </div>
+
+    </div>
+
+    <button
+        type="button"
+        class="no-print"
+        onclick="adicionarAgente()"
+        style="
+            margin-top:5px;
+            padding:8px 12px;
+            background:#064516;
+            color:white;
+            border:none;
+            border-radius:4px;
+            cursor:pointer;">
+        + Adicionar AAF / AEA
+    </button>
+
 </div>
 <div class="field-group">
     <label>Unidade de Lotação</label>
